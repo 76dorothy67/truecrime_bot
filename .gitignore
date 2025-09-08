@@ -13,9 +13,6 @@ venv/
 
 *.log
 
-data/
-crime_story*.txt
-
 .idea/
 *.iml
 

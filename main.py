@@ -4,7 +4,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 from langchain.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
-
+from tts import text_to_speech
 
 logging.basicConfig(
     filename="bot.log",
@@ -25,7 +25,7 @@ def generate_story(prompt_text: str, api_key: str) -> str:
     return story.content
 
 
-def save_story(story: str, folder: str = "data") -> str:
+def save_story(story: str, folder: str = "data/stories") -> str:
     os.makedirs(folder, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     file_path = os.path.join(folder, f"crime_story_{timestamp}.txt")
@@ -46,6 +46,11 @@ def main():
         story = generate_story(prompt_text, api_key)
         file_path = save_story(story)
         logging.info(f"Story generated and saved to {file_path}")
+    except Exception as e:
+        logging.error(f"Error: {e}", exc_info=True)
+    try:
+        audio_path = text_to_speech(story)
+        logging.info(f"Generated audio file: {audio_path}")
     except Exception as e:
         logging.error(f"Error: {e}", exc_info=True)
 
